@@ -18,14 +18,16 @@ import { API_BASE } from './constants';
 import loadImage from 'blueimp-load-image';
 
 const App = () => {
-  const { folders, onCreateFolder } = useData();
+  const { folders, onCreateFolder, onSaveImage } = useData();
 
   const [selectedFolderSlug, setSelectedFolderSlug] = useState(null);
   const [createFolderModalIsShown, setCreateFolderModalIsShown] = useState(
     false,
   );
 
-  const activeFolder = folders.find(({ slug }) => slug === selectedFolderSlug);
+  const activeFolder = (folders || []).find(
+    ({ slug }) => slug === selectedFolderSlug,
+  );
 
   const uploadImageToServer = file => {
     loadImage(file, {
@@ -52,10 +54,10 @@ const App = () => {
           })
           .then(data => {
             let imageUrl = API_BASE + '/' + data.path;
+            onSaveImage(imageUrl);
             console.log(`You can access the updated image here: ${imageUrl}`);
           });
       })
-
       .catch(error => {
         console.error(error);
       });
@@ -73,7 +75,6 @@ const App = () => {
     mediumZoom(document.querySelectorAll('#images img'));
   });
 
-  console.log(activeFolder);
   return (
     <Layout>
       <Header>

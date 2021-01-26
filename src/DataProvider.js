@@ -1,6 +1,7 @@
 import { camelCase } from 'lodash';
-import { useState, createContext, useEffect } from 'react';
+import { useState, createContext } from 'react';
 import { useDeepCompareEffect } from 'react-use';
+import { findIndex, uniqueId } from 'lodash';
 
 export const DataContext = createContext();
 
@@ -10,6 +11,7 @@ const initialFolders = [
     slug: 'untitledFolder',
     images: [
       {
+        id: uniqueId(),
         url:
           'https://images.unsplash.com/photo-1524165152352-6d21c2485dff?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=640&q=80',
         createdAt: new Date(),
@@ -37,13 +39,40 @@ const DataProvider = ({ children }) => {
     ]);
   };
 
+  const handleSaveImage = imageUrl => {
+    setFolders(
+      folders.map(folder => {
+        if (folder.slug !== 'untitledFolder') {
+          return folder;
+        }
+
+        return {
+          ...folder,
+          images: [
+            ...folder.images,
+            {
+              id: uniqueId(),
+              url: imageUrl,
+              createdAt: new Date(),
+            },
+          ],
+        };
+      }),
+    );
+  };
+
   useDeepCompareEffect(() => {
+    console.log('On passe ici');
     localStorage.setItem('folders', JSON.stringify(folders));
   }, [{ folders }]);
 
   return (
     <DataContext.Provider
-      value={{ folders, onCreateFolder: handleCreateFolder }}
+      value={{
+        folders,
+        onCreateFolder: handleCreateFolder,
+        onSaveImage: handleSaveImage,
+      }}
     >
       {children}
     </DataContext.Provider>
