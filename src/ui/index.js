@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
 export const Layout = styled.div`
+  height: 100vh;
   display: grid;
-  grid-template-columns: 320px 100%;
-  grid-template-rows: 80px 100%;
+  grid-template-columns: 320px 1fr;
+  grid-template-rows: 80px 1fr;
   grid-template-areas:
     'header header'
     'sidebar main';
@@ -20,15 +21,14 @@ export const ButtonReset = styled.button`
   font-family: inherit;
 `;
 
-export const Page = styled.div`
-  min-height: 100vh;
-`;
+export const Page = styled.div``;
 
 export const Header = styled.header`
   grid-area: header;
   display: flex;
   padding: 16px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  align-items: center;
 `;
 
 export const Sidebar = styled.aside`
@@ -86,7 +86,6 @@ export const Thumbnail = styled.div`
   border: 2px solid #011658;
   border-radius: 4px;
   width: 100%;
-  aspect-ratio: 1;
   background-color: #efefef;
   display: flex;
   align-items: center;

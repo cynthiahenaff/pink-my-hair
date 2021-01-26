@@ -10,9 +10,12 @@ import {
   Layout,
 } from 'ui';
 import CreateFolderModal from 'components/CreateFolderModal';
+import FileButton from 'components/FileButton';
 import { useData } from 'hooks';
 import { MdAddCircleOutline } from 'react-icons/md';
 import mediumZoom from 'medium-zoom';
+import { API_BASE } from './constants';
+import loadImage from 'blueimp-load-image';
 
 const App = () => {
   const { folders, onCreateFolder } = useData();
@@ -24,6 +27,48 @@ const App = () => {
 
   const activeFolder = folders.find(({ slug }) => slug === selectedFolderSlug);
 
+  const uploadImageToServer = file => {
+    loadImage(file, {
+      maxWidth: 1200,
+      canvas: true,
+    })
+      .then(imageData => {
+        let image = imageData.image;
+
+        let imageBase64 = image.toDataURL('image/png');
+
+        let data = {
+          b64_img: imageBase64,
+        };
+        return fetch(API_BASE + '/upload', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
+          .then(result => {
+            return result.json();
+          })
+          .then(data => {
+            let imageUrl = API_BASE + '/' + data.path;
+            console.log(`You can access the updated image here: ${imageUrl}`);
+          });
+      })
+
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  const handleAddImage = e => {
+    if (e.target.files && e.target.files[0]) {
+      uploadImageToServer(e.target.files[0]);
+    } else {
+      console.error('No file was picked');
+    }
+  };
+
   useEffect(() => {
     mediumZoom(document.querySelectorAll('#images img'));
   });
@@ -31,7 +76,12 @@ const App = () => {
   console.log(activeFolder);
   return (
     <Layout>
-      <Header></Header>
+      <Header>
+        <FileButton onAddImage={handleAddImage}>
+          <MdAddCircleOutline />
+          New picture
+        </FileButton>
+      </Header>
 
       <Sidebar>
         <Button onClick={() => setCreateFolderModalIsShown(true)}>
