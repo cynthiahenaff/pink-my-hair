@@ -1,5 +1,6 @@
 import { camelCase } from 'lodash';
-import { useState, createContext } from 'react';
+import { useState, createContext, useEffect } from 'react';
+import { useDeepCompareEffect } from 'react-use';
 
 export const DataContext = createContext();
 
@@ -26,6 +27,15 @@ const DataProvider = ({ children }) => {
       { name: folderName, slug: camelCase(folderName), images: [] },
     ]);
   };
+
+  useDeepCompareEffect(() => {
+    localStorage.setItem('folders', JSON.stringify(folders));
+  }, [{ folders }]);
+
+  useEffect(() => {
+    const folders = localStorage.getItem('folders');
+    setFolders(JSON.parse(folders));
+  }, []);
 
   return (
     <DataContext.Provider
