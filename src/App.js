@@ -8,6 +8,7 @@ import {
   ThumbnailGrid,
   Thumbnail,
   Layout,
+  Trigger,
 } from 'ui';
 import CreateFolderModal from 'components/CreateFolderModal';
 import FileButton from 'components/FileButton';
@@ -16,17 +17,14 @@ import { MdAddCircleOutline } from 'react-icons/md';
 import mediumZoom from 'medium-zoom';
 import { API_BASE } from './constants';
 import loadImage from 'blueimp-load-image';
+import { Dropdown } from '@primer/components';
 
 const App = () => {
-  const { folders, onCreateFolder, onSaveImage } = useData();
+  const { folders, onCreateFolder, onSaveImage, onMoveImage } = useData();
 
   const [selectedFolderSlug, setSelectedFolderSlug] = useState(null);
   const [createFolderModalIsShown, setCreateFolderModalIsShown] = useState(
     false,
-  );
-
-  const activeFolder = (folders || []).find(
-    ({ slug }) => slug === selectedFolderSlug,
   );
 
   const uploadImageToServer = file => {
@@ -71,6 +69,14 @@ const App = () => {
     }
   };
 
+  const activeFolder = (folders || []).find(
+    ({ slug }) => slug === selectedFolderSlug,
+  );
+
+  const moveFoldersOptions = (folders || []).filter(
+    ({ slug }) => slug !== selectedFolderSlug,
+  );
+
   useEffect(() => {
     mediumZoom(document.querySelectorAll('#images img'));
   });
@@ -101,9 +107,26 @@ const App = () => {
       </Sidebar>
       <Main>
         <ThumbnailGrid id="images">
-          {(activeFolder?.images ?? []).map(({ url }, index) => (
+          {(activeFolder?.images ?? []).map((image, index) => (
             <Thumbnail key={index}>
-              <img src={url} alt=""></img>
+              <img src={image?.url} alt=""></img>
+              <Trigger>
+                <Dropdown>
+                  <summary>
+                    Move
+                    <Dropdown.Caret />
+                  </summary>
+                  <Dropdown.Menu direction="se">
+                    {moveFoldersOptions.map(folder => (
+                      <Dropdown.Item
+                        onClick={() => onMoveImage(image, folder?.slug)}
+                      >
+                        {folder?.name}
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Trigger>
             </Thumbnail>
           ))}
         </ThumbnailGrid>

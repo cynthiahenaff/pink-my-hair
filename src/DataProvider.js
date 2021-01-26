@@ -1,7 +1,7 @@
 import { camelCase } from 'lodash';
 import { useState, createContext } from 'react';
 import { useDeepCompareEffect } from 'react-use';
-import { findIndex, uniqueId } from 'lodash';
+import { uniqueId } from 'lodash';
 
 export const DataContext = createContext();
 
@@ -13,7 +13,7 @@ const initialFolders = [
       {
         id: uniqueId(),
         url:
-          'https://images.unsplash.com/photo-1524165152352-6d21c2485dff?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=640&q=80',
+          'https://ae01.alicdn.com/kf/HTB1RAUfJXXXXXa_XVXXq6xXFXXXE/Perruque-d-animal-familier-perruque-de-chat-amusante-cheveux-boucl-s-roses.jpg',
         createdAt: new Date(),
       },
     ],
@@ -61,8 +61,21 @@ const DataProvider = ({ children }) => {
     );
   };
 
+  const handleMoveImage = (image, targetFolder) => {
+    setFolders(
+      folders.map(folder => {
+        if (folder?.slug === targetFolder) {
+          return { ...folder, images: [...folder?.images, image] };
+        }
+        return {
+          ...folder,
+          images: folder?.images.filter(({ id }) => id !== image?.id),
+        };
+      }),
+    );
+  };
+
   useDeepCompareEffect(() => {
-    console.log('On passe ici');
     localStorage.setItem('folders', JSON.stringify(folders));
   }, [{ folders }]);
 
@@ -72,6 +85,7 @@ const DataProvider = ({ children }) => {
         folders,
         onCreateFolder: handleCreateFolder,
         onSaveImage: handleSaveImage,
+        onMoveImage: handleMoveImage,
       }}
     >
       {children}

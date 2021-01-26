@@ -21,8 +21,6 @@ export const ButtonReset = styled.button`
   font-family: inherit;
 `;
 
-export const Page = styled.div``;
-
 export const Header = styled.header`
   grid-area: header;
   display: flex;
@@ -79,7 +77,7 @@ export const Button = styled(ButtonReset)`
 export const ThumbnailGrid = styled.div`
   display: grid;
   grid-gap: 32px;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(6, 1fr);
 `;
 
 export const Thumbnail = styled.div`
@@ -89,9 +87,16 @@ export const Thumbnail = styled.div`
   background-color: #efefef;
   display: flex;
   align-items: center;
+  position: relative;
 
   img {
     width: 100%;
     height: auto;
   }
+`;
+
+export const Trigger = styled.div`
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
 `;

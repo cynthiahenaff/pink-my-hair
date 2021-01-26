@@ -5,14 +5,12 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import DataProvider from './DataProvider';
 import 'sanitize.css';
-import { Page } from 'ui';
+import 'semantic-ui-css/semantic.min.css';
 
 ReactDOM.render(
   <React.StrictMode>
     <DataProvider>
-      <Page>
-        <App />
-      </Page>
+      <App />
     </DataProvider>
   </React.StrictMode>,
   document.getElementById('root'),
