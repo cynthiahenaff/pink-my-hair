@@ -9,14 +9,7 @@ const initialFolders = [
   {
     name: 'Untitled Folder',
     slug: 'untitledFolder',
-    images: [
-      {
-        id: uniqueId(),
-        url:
-          'https://ae01.alicdn.com/kf/HTB1RAUfJXXXXXa_XVXXq6xXFXXXE/Perruque-d-animal-familier-perruque-de-chat-amusante-cheveux-boucl-s-roses.jpg',
-        createdAt: new Date(),
-      },
-    ],
+    images: [],
   },
 ];
 
