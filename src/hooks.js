@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { DataContext } from 'contexts';
+import { DataContext } from 'DataProvider';
 
 export const useData = () => {
   const context = useContext(DataContext);
