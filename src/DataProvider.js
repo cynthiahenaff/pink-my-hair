@@ -18,8 +18,17 @@ const initialFolders = [
   },
 ];
 
+const getInitialFolders = () => {
+  try {
+    const folders = JSON.parse(localStorage.getItem('folders'));
+    return folders || initialFolders;
+  } catch (err) {
+    return [];
+  }
+};
+
 const DataProvider = ({ children }) => {
-  const [folders, setFolders] = useState(initialFolders);
+  const [folders, setFolders] = useState(getInitialFolders());
 
   const handleCreateFolder = folderName => {
     setFolders([
@@ -31,11 +40,6 @@ const DataProvider = ({ children }) => {
   useDeepCompareEffect(() => {
     localStorage.setItem('folders', JSON.stringify(folders));
   }, [{ folders }]);
-
-  useEffect(() => {
-    const folders = localStorage.getItem('folders');
-    setFolders(JSON.parse(folders));
-  }, []);
 
   return (
     <DataContext.Provider
